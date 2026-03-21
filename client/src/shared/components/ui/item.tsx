@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { cva, type VariantProps } from 'class-variance-authority'
+import { cva  } from 'class-variance-authority'
+import type {VariantProps} from 'class-variance-authority';
 import { Slot } from 'radix-ui'
 
 import { cn } from '@/shared/lib/utils'
@@ -134,8 +135,8 @@ function ItemDescription({ className, ...props }: React.ComponentProps<'p'>) {
     <p
       data-slot="item-description"
       className={cn(
-        'line-clamp-2 text-sm leading-normal font-normal text-balance text-muted-foreground',
-        '[&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary',
+        'text-muted-foreground line-clamp-2 text-sm leading-normal font-normal text-balance',
+        '[&>a:hover]:text-primary [&>a]:underline [&>a]:underline-offset-4',
         className,
       )}
       {...props}
