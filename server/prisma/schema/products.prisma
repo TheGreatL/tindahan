@@ -1,0 +1,106 @@
+model ProductCategory {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt()
+  deletedAt DateTime?
+  products  Product[]
+}
+
+model ProductBrand {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt()
+  deletedAt   DateTime?
+  products    Product[]
+}
+
+model Product {
+  id              String           @id @default(uuid())
+  categoryId      String
+  category        ProductCategory  @relation(fields: [categoryId], references: [id])
+  productBrandId  String
+  brand           ProductBrand     @relation(fields: [productBrandId], references: [id])
+  code            String
+  name            String
+  description     String?
+  images          ProductImage[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt()
+  deletedAt       DateTime?
+  productVariants ProductVariant[]
+}
+
+model ProductImage {
+  id        String    @id @default(uuid())
+  image     String
+  product   Product   @relation(fields: [productId], references: [id])
+  productId String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt()
+  deletedAt DateTime?
+}
+
+model Attribute {
+  id              String           @id @default(uuid())
+  name            String // e.g. "Size", "Color"
+  attributeValues AttributeValue[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt()
+  deletedAt       DateTime?
+}
+
+model AttributeValue {
+  id          String                  @id @default(uuid())
+  attributeId String
+  attribute   Attribute               @relation(fields: [attributeId], references: [id])
+  value       String // e.g. "M", "Red"
+  variants    VariantAttributeValue[]
+  createdAt   DateTime                @default(now())
+  updatedAt   DateTime                @updatedAt()
+  deletedAt   DateTime?
+}
+
+model VariantAttributeValue {
+  id                String             @id @default(uuid())
+  variantId         String
+  variant           ProductVariant     @relation(fields: [variantId], references: [id])
+  attributeValueId  String
+  price             Float              @default(0)
+  attributeValue    AttributeValue     @relation(fields: [attributeValueId], references: [id])
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt()
+  deletedAt         DateTime?
+  customerDebtItems CustomerDebtItem[]
+  purchaseItems     PurchaseItem[]
+
+  @@unique([variantId, attributeValueId])
+}
+
+model ProductVariant {
+  id                 String                  @id @default(uuid())
+  productId          String
+  product            Product                 @relation(fields: [productId], references: [id])
+  variantAttributes  VariantAttributeValue[]
+  createdAt          DateTime                @default(now())
+  updatedAt          DateTime                @updatedAt()
+  deletedAt          DateTime?
+  productInventories ProductInventory?
+
+  @@index([productId])
+}
+
+model ProductInventory {
+  id               String         @id @default(uuid())
+  productVariantId String         @unique
+  productVariant   ProductVariant @relation(fields: [productVariantId], references: [id])
+  sku              String         @unique
+  barCode          String         @unique
+
+  stock     Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt()
+  deletedAt DateTime?
+}

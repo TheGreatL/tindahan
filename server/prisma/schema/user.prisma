@@ -1,13 +1,28 @@
 model User {
+  id           String        @id @default(uuid())
+  email        String        @unique
+  password     String
+  firstName    String
+  lastName     String
+  avatar       String?       @default("test")
+  session      Session[]
+  lastLogin    DateTime?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt()
+  deletedAt    DateTime?
+  userRoles    UserRole[]
+  activityLogs ActivityLog[]
+}
+
+model UserRole {
   id        String    @id @default(uuid())
-  email     String    @unique
-  password  String
-  firstName String
-  lastName  String
-  avatar    String?   @default("test")
-  role      Role      @default(USER)
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  roleId    String
+  role      Role      @relation(fields: [roleId], references: [id])
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt()
   deletedAt DateTime?
-  sessions  Session[]
+
+  @@unique([userId, roleId])
 }

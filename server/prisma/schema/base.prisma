@@ -6,7 +6,16 @@ datasource db {
   provider = "postgresql"
 }
 
-enum Role {
-  USER
-  ADMIN
+enum StockLevel {
+  IN_STOCK
+  LOW_STOCK
+  CRITICAL
+  OVERSTOCK
+  OUT_OF_STOCK
+}
+
+enum DebStatus {
+  PAID
+  UN_PAID
+  PARTIALLY_PAID
 }

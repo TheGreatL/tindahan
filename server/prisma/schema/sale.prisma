@@ -1,0 +1,36 @@
+model Purchase {
+  id         String    @id @default(uuid())
+  customerId String?
+  customer   Customer? @relation(fields: [customerId], references: [id])
+  total      Float
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt()
+  deletedAt  DateTime?
+  sales      Sales[]
+}
+
+model PurchaseItem {
+  id                        String                @id @default(uuid())
+  createdAt                 DateTime              @default(now())
+  updatedAt                 DateTime              @updatedAt()
+  deletedAt                 DateTime?
+  quantity                  Int
+  price                     Float
+  total                     Float
+  productVariantAttributeId String
+  productVariantAttribute   VariantAttributeValue @relation(fields: [productVariantAttributeId], references: [id])
+}
+
+model Sales {
+  id String @id @default(uuid())
+
+  customerDebtId String?
+  customerDebt   CustomerDebt? @relation(fields: [customerDebtId], references: [id])
+
+  purchaseId String
+  purchase   Purchase  @relation(fields: [purchaseId], references: [id])
+  total      Float
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt()
+  deletedAt  DateTime?
+}

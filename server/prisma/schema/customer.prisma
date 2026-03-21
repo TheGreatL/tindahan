@@ -1,0 +1,37 @@
+model Customer {
+  id            String         @id @default(uuid())
+  name          String
+  contact       Json
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt()
+  deletedAt     DateTime?
+  customerDebts CustomerDebt[]
+  purchases     Purchase[]
+}
+
+model CustomerDebt {
+  id                String             @id @default(uuid())
+  customerId        String
+  customer          Customer           @relation(fields: [customerId], references: [id])
+  status            DebStatus
+  total             Float
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt()
+  deletedAt         DateTime?
+  customerDebtItems CustomerDebtItem[]
+  sales             Sales[]
+}
+
+model CustomerDebtItem {
+  id                        String                @id @default(uuid())
+  customerDebtId            String
+  customerDebt              CustomerDebt          @relation(fields: [customerDebtId], references: [id])
+  quantity                  Int
+  total                     Float
+  price                     Float
+  productVariantAttributeId String
+  productVariantAttribute   VariantAttributeValue @relation(fields: [productVariantAttributeId], references: [id])
+  createdAt                 DateTime              @default(now())
+  updatedAt                 DateTime              @updatedAt()
+  deletedAt                 DateTime?
+}
