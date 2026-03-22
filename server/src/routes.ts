@@ -1,6 +1,7 @@
 import {Router} from 'express';
 import authRoute from './features/auth/auth.route';
 import userRoute from './features/user/user.route';
+import productRoute from './features/product/product.route';
 
 /**
  * Gold Standard:
@@ -14,5 +15,6 @@ routes.use('/auth', authRoute);
 
 // 2. User related routes (Profile management, user retrieval)
 routes.use('/user', userRoute);
+routes.use('/product', productRoute);
 
 export default routes;
