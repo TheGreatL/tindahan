@@ -3,6 +3,71 @@
 > A full-stack web application
 
 ---
+TINDAHAN
+Software app for retail stores
+🟢 Core Modules
+1.	POS Module
+o	Barcode scanning
+o	Receipt printing
+o	Multiple payment methods
+2.	Inventory Management Module
+o	Real-time stock tracking
+o	Low-stock alerts
+o	Supplier records
+3.	Customer Management Module
+o	Customer profiles & purchase history
+o	Debit/credit tracking
+4.	Financial Management Module (newly added for expenses)
+o	Income tracking (sales auto-synced from POS, other sources)
+o	Expense tracking (bills, water, internet, rent, salaries, supplier payments)
+o	Profit & loss overview
+o	Expense categorization
+🔵 Advanced Modules
+5.	Sales & Analytics Module
+o	Daily/weekly/monthly sales reports
+o	Best-selling products
+o	Profit margin analysis
+6.	Employee/User Management Module
+o	Role-based access (cashier vs. manager)
+o	Shift tracking
+7.	Offline Mode Module
+o	POS works without internet
+o	Syncs data when connection is restored
+8.	Mobile App Module
+o	Mobile-friendly interface
+o	Access POS, inventory, customer, and financial data on mobile
+9.	AI Insights Module
+o	Predictive restocking (based on sales trends)
+o	Customer purchase behavior analysis
+![flow modules](flow-modules.png)
+ Data Flow Between Modules
+•	POS → Inventory: Sales reduce stock automatically.
+•	POS → Customer Management: Purchases logged under customer profiles, debts updated.
+•	POS → Financials: Sales flow into income records.
+•	Inventory → Financials: Supplier purchases logged as expenses.
+•	Customer Management → Financials: Debt repayments recorded as income.
+•	Analytics → All Modules: Pulls data from POS, Inventory, Financials, and Customer Management.
+•	AI Insights → Inventory + Customer Management: Learns from sales and customer behavior.
+
+System flow modules
+
+Core Modules
+•	POS → Sales, receipts, payments
+•	Inventory Management → Stock tracking, supplier records
+•	Customer Management → Profiles, debts/credits
+•	Financial Management → Income + expense tracking, profit/loss
+ Advanced Modules
+•	Sales & Analytics → Reports, best-sellers, margins
+•	Employee/User Management → Roles, shifts
+•	Offline Mode → POS works without internet
+•	Mobile App → Access on mobile devices
+•	AI Insights → Predictive restocking, customer behavior
+Data Flow Highlights
+•	POS feeds Inventory, Customer, and Financials
+•	Inventory and Customer both feed into Financials (expenses & debt repayments)
+•	Analytics pulls from all core modules
+•	AI Insights learns from Inventory + Customer data
+
 
 ## 📖 What is this?
 
