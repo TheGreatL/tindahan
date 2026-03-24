@@ -8,7 +8,7 @@ describe('Product Brand API', () => {
   const baseUrl = '/api/product/brand';
   const payload = {name: 'Nike', description: 'Nike a shoe brand'} as TCreateProductBrand;
   const accessToken =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNkMDVmYTJlLTgzODctNGYyOC1iZGFlLTM0Zjc0N2NiMWEwZiIsImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsImlhdCI6MTc3NDE2NDcwOSwiZXhwIjoxNzc0MTY1NjA5fQ.Ut0uaJT0cVsiQqqvVM_MSSKgzdC6duSOKbwiN90AWrs';
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNkMDVmYTJlLTgzODctNGYyOC1iZGFlLTM0Zjc0N2NiMWEwZiIsImVtYWlsIjoidXNlckBleGFtcGxlLmNvbSIsImlhdCI6MTc3NDM1NjMzMCwiZXhwIjoxNzc0MzU3MjMwfQ.2xUFWOizqHhfpK9GzpMY6X29OlmHtUFMuUH4rUAFjrI';
   beforeEach(async () => {
     console.log('before each call back');
     await prisma.productBrand.deleteMany({where: {name: payload.name}});
@@ -16,6 +16,7 @@ describe('Product Brand API', () => {
   describe('CREATE Product Brand', () => {
     // CREATE
     it(`POST ${baseUrl}/ should create a product brand`, async () => {
+      console.log('/ should create a product brand');
       const res = await request(app).post(baseUrl).set('Authorization', `Bearer ${accessToken}`).send(payload);
 
       expect(res.status).toBe(httpCode.OK);
@@ -26,6 +27,7 @@ describe('Product Brand API', () => {
     });
 
     it(`POST ${baseUrl}/ should reject duplicate`, async () => {
+      console.log('/ should reject duplicate');
       await request(app).post(baseUrl).set('Authorization', `Bearer ${accessToken}`).send(payload);
       const res = await request(app).post(baseUrl).set('Authorization', `Bearer ${accessToken}`).send(payload);
 
@@ -51,12 +53,12 @@ describe('Product Brand API', () => {
 
   // UPDATE
   describe('PATCH', () => {
-    it(`PUT ${baseUrl}/:id should update brand`, async () => {
+    it(`PATCH ${baseUrl}/:id should update brand`, async () => {
       const brand = await prisma.productBrand.create({data: payload});
       const updated = {name: 'Adidas', description: 'Updated desc'};
 
       const res = await request(app)
-        .put(`${baseUrl}/${brand.id}`)
+        .patch(`${baseUrl}/${brand.id}`)
         .set('Authorization', `Bearer ${accessToken}`)
         .send(updated);
 
@@ -74,9 +76,14 @@ describe('Product Brand API', () => {
       const brand = await prisma.productBrand.create({data: payload});
       const res = await request(app).delete(`${baseUrl}/${brand.id}`).set('Authorization', `Bearer ${accessToken}`);
 
-      expect(res.status).toBe(httpCode.NO_CONTENT);
+      expect(res.status).toBe(httpCode.OK);
 
-      const dbRecord = await prisma.productBrand.findUnique({where: {id: brand.id}});
+      const dbRecord = await prisma.productBrand.findUnique({
+        where: {
+          id: brand.id,
+          deletedAt: null
+        }
+      });
       expect(dbRecord).toBeNull();
     });
   });
