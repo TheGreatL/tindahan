@@ -7,22 +7,14 @@ model User {
   avatar       String?       @default("test")
   session      Session[]
   lastLogin    DateTime?
+  roleId       String
+  role         Role          @relation(fields: [roleId], references: [id])
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt()
   deletedAt    DateTime?
-  userRoles    UserRole[]
   activityLogs ActivityLog[]
+
+  @@index([roleId])
+  @@map("users")
 }
 
-model UserRole {
-  id        String    @id @default(uuid())
-  userId    String
-  user      User      @relation(fields: [userId], references: [id])
-  roleId    String
-  role      Role      @relation(fields: [roleId], references: [id])
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt()
-  deletedAt DateTime?
-
-  @@unique([userId, roleId])
-}

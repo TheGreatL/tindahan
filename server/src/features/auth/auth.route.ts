@@ -7,7 +7,8 @@ import {authMiddleware, authAttemptLimiter} from '../../shared/middleware/auth.m
 const route = Router();
 
 route.post('/login', authAttemptLimiter, validateSchema(loginSchema), AuthController.login);
-route.post('/register', AuthController.register);
+route.post('/register', authAttemptLimiter, AuthController.register);
+
 route.post('/refresh', AuthController.refresh);
 route.post('/logout', AuthController.logout);
 route.get('/me', authMiddleware, AuthController.getMe);

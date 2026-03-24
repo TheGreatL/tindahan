@@ -1,4 +1,4 @@
-import {Role} from '@prisma/client';
+import {RoleType, Permission} from '@prisma/client';
 import {Request} from 'express';
 
 /**
@@ -7,8 +7,13 @@ import {Request} from 'express';
 export interface TJWTPayload {
   id: string;
   email: string;
-  role: Role;
+  role: {
+    name: string;
+    type: RoleType;
+    permissions: Permission[];
+  };
 }
+
 
 /**
  * Payload for refresh tokens (typically contains less info)

@@ -1,46 +1,51 @@
+enum RoleType {
+  ADMIN
+  EMPLOYEE
+}
+
+enum Permission {
+  // POS Permissions
+  POS_ACCESS
+  POS_VOID_SALE
+  POS_REPRINT_RECEIPT
+
+  // Inventory Permissions
+  INVENTORY_VIEW
+  INVENTORY_EDIT
+  INVENTORY_ADD_STOCK
+  INVENTORY_RECORDS_DELETE
+
+  // Customer Permissions
+  CUSTOMER_VIEW
+  CUSTOMER_EDIT
+  CUSTOMER_DELETE
+
+  // Financial Permissions
+  FINANCIALS_VIEW
+  FINANCIALS_MANAGE_EXPENSES
+  FINANCIALS_PROFIT_LOSS_VIEW
+
+  // User/Employee Management
+  USER_VIEW
+  USER_MANAGE_ROLES
+  USER_DELETE
+
+  // System
+  SYSTEM_SETTINGS
+  SYSTEM_BACKUP
+}
+
 model Role {
-  id          String    @id @default(uuid())
-  name        String    @unique
-  description String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt()
-  deletedAt   DateTime?
-
-  userRoles       UserRole[]
-  rolePermissions RolePermission[]
-}
-
-model Permission {
-  id              String           @id @default(uuid())
-  name            String           @unique
-  description     String?
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt()
-  deletedAt       DateTime?
-  rolePermissions RolePermission[]
-  resource        Resource?        @relation(fields: [resourceId], references: [id])
-  resourceId      String?
-}
-
-model RolePermission {
-  id           String     @id @default(uuid())
-  roleId       String
-  role         Role       @relation(fields: [roleId], references: [id])
-  permissionId String
-  permission   Permission @relation(fields: [permissionId], references: [id])
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt()
-  deletedAt    DateTime?
-
-  @@unique([roleId, permissionId])
-}
-
-model Resource {
   id          String       @id @default(uuid())
-  name        String
-  type        String // e.g., "order", "inventory", "user"
+  name        String       @unique
+  description String?
+  type        RoleType     @default(EMPLOYEE)
+  permissions Permission[] @default([POS_ACCESS])
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt()
   deletedAt   DateTime?
-  permissions Permission[]
+
+  users User[]
+
+  @@map("roles")
 }

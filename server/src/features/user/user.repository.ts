@@ -1,40 +1,50 @@
-import {Prisma, User} from '@prisma/client';
+import {Prisma} from '@prisma/client';
 import {prisma} from '../../shared/lib/prisma';
+
+export type TUserWithRole = Prisma.UserGetPayload<{include: {role: true}}>;
+
 export class UserRepository {
-  async findById(id: string): Promise<User | null> {
-    return prisma.user.findUnique({
-      where: {id}
+  async findById(id: string): Promise<TUserWithRole | null> {
+    return await prisma.user.findUnique({
+      where: {id},
+      include: {role: true}
     });
   }
 
-  async findByEmail(email: string): Promise<User | null> {
-    return prisma.user.findUnique({
-      where: {email}
+  async findByEmail(email: string): Promise<TUserWithRole | null> {
+    return await prisma.user.findUnique({
+      where: {email},
+      include: {role: true}
     });
   }
 
-  async findAll(skip?: number, take?: number, where?: Prisma.UserWhereInput): Promise<User[]> {
-    return prisma.user.findMany({
+  async findAll(skip?: number, take?: number, where?: Prisma.UserWhereInput): Promise<TUserWithRole[]> {
+    return await prisma.user.findMany({
       skip,
       take,
-      where
+      where,
+      include: {role: true}
     });
   }
 
   async count(where?: Prisma.UserWhereInput): Promise<number> {
-    return prisma.user.count({where});
+    return await prisma.user.count({where});
   }
 
-  async update(id: string, data: Prisma.UserUpdateInput): Promise<User> {
-    return prisma.user.update({
+  async update(id: string, data: Prisma.UserUpdateInput): Promise<TUserWithRole> {
+    return await prisma.user.update({
       where: {id},
-      data
+      data,
+      include: {role: true}
     });
   }
 
-  async create(data: Prisma.UserCreateInput): Promise<User> {
-    return prisma.user.create({
-      data
+  async create(data: Prisma.UserCreateInput): Promise<TUserWithRole> {
+    return await prisma.user.create({
+      data,
+      include: {role: true}
     });
   }
 }
+
+

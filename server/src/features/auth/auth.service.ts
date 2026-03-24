@@ -54,7 +54,11 @@ export class AuthService {
     const payload: TJWTPayload = {
       id: String(user.id),
       email: user.email,
-      role: user.role
+      role: {
+        name: user.role.name,
+        type: user.role.type,
+        permissions: user.role.permissions
+      }
     };
 
     // 2. Prepare Payload for Refresh Token
@@ -87,18 +91,23 @@ export class AuthService {
 
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
+    // Default to 'Cashier' role for new registrations in this Tindahan app
     const user = await this.userRepository.create({
       email: data.email,
       password: hashedPassword,
       firstName: data.firstName,
       lastName: data.lastName,
-      role: 'USER'
+      role: {connect: {name: 'Cashier'}}
     });
 
     const payload: TJWTPayload = {
       id: String(user.id),
       email: user.email,
-      role: user.role
+      role: {
+        name: user.role.name,
+        type: user.role.type,
+        permissions: user.role.permissions
+      }
     };
 
     const refreshPayload: TRefreshTokenPayload = {
@@ -147,7 +156,11 @@ export class AuthService {
       const accessToken = await TokenService.signAccessToken({
         id: user.id,
         email: user.email,
-        role: user.role
+        role: {
+          name: user.role.name,
+          type: user.role.type,
+          permissions: user.role.permissions
+        }
       });
 
       const newRefreshToken = await TokenService.signRefreshToken(
@@ -166,6 +179,7 @@ export class AuthService {
       throw new HttpException('Invalid refresh token', httpStatus.UNAUTHORIZED);
     }
   }
+
 
   /**
    * Revokes a session (Logout).
