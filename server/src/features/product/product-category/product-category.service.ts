@@ -20,19 +20,14 @@ export class ProductCategoryService {
   ): Promise<{data: ProductCategory[]; total: number}> {
     const skip = (page - 1) * limit;
 
-    const where: Prisma.ProductCategoryWhereInput = {
-      AND: [
-        {
+    const where: Prisma.ProductCategoryWhereInput = search
+      ? {
           name: {contains: search, mode: 'insensitive'}
-        },
-        {
-          deletedAt: includeArchive ? undefined : null
         }
-      ]
-    };
+      : {};
     const [data, total] = await Promise.all([
-      this.productCategoryRepository.findAll(skip, limit, where),
-      this.productCategoryRepository.count(where)
+      this.productCategoryRepository.findAll(skip, limit, where, includeArchive),
+      this.productCategoryRepository.count(where, includeArchive)
     ]);
     return {data, total};
   }

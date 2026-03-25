@@ -42,7 +42,8 @@ export type TUpdateRole = z.infer<typeof updateRoleSchema>;
 export const getRolesQuerySchema = z.object({
   page: z.coerce.number().optional().default(1),
   limit: z.coerce.number().optional().default(10),
-  search: z.string().optional()
+  search: z.string().optional(),
+  includeArchived: z.preprocess((val) => val === 'true' || val === true, z.boolean()).optional().default(false)
 });
 
 export type TGetRolesQuery = z.infer<typeof getRolesQuerySchema>;

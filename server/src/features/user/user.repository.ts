@@ -18,18 +18,18 @@ export class UserRepository {
     });
   }
 
-  async findAll(skip?: number, take?: number, where?: Prisma.UserWhereInput): Promise<TUserWithRole[]> {
+  async findAll(skip?: number, take?: number, where?: Prisma.UserWhereInput, includeArchived: boolean = false): Promise<TUserWithRole[]> {
     return await prisma.user.findMany({
       skip,
       take,
-      where: {...where, deletedAt: null},
+      where: {...where, ...(includeArchived ? {} : {deletedAt: null})},
       include: {role: true},
       orderBy: {createdAt: 'desc'}
     });
   }
-
-  async count(where?: Prisma.UserWhereInput): Promise<number> {
-    return await prisma.user.count({where: {...where, deletedAt: null}});
+ 
+  async count(where?: Prisma.UserWhereInput, includeArchived: boolean = false): Promise<number> {
+    return await prisma.user.count({where: {...where, ...(includeArchived ? {} : {deletedAt: null})}});
   }
 
   async update(id: string, data: Prisma.UserUpdateInput): Promise<TUserWithRole> {

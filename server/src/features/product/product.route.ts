@@ -6,7 +6,7 @@ import {ProductController} from './product.controller';
 import {authMiddleware, authorize} from '../../shared/middleware/auth.middleware';
 import {Permission} from '@prisma/client';
 import {validateSchema} from '../../shared/middleware/schema-validate.middleware';
-import {createProductSchema, updateProductSchema} from './product.schema';
+import {createProductSchema, updateProductSchema, productQuerySchema} from './product.schema';
 
 const route = Router();
 
@@ -16,7 +16,13 @@ route.use('/category', productCategoryRoute);
 route.use('/attribute', productAttributeRoute);
 
 // 2. Main Product CRUD
-route.get('/', authMiddleware, authorize([Permission.INVENTORY_VIEW]), ProductController.getAllProducts);
+route.get(
+  '/',
+  authMiddleware,
+  authorize([Permission.INVENTORY_VIEW]),
+  validateSchema(productQuerySchema, 'query'),
+  ProductController.getAllProducts
+);
 
 route.get('/:id', authMiddleware, authorize([Permission.INVENTORY_VIEW]), ProductController.getProductById);
 

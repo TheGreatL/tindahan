@@ -14,7 +14,8 @@ export class RoleService {
     return await this.repository.getAll({
       page: query.page || 1,
       limit: query.limit || 10,
-      search: query.search
+      search: query.search,
+      includeArchived: query.includeArchived
     });
   }
 

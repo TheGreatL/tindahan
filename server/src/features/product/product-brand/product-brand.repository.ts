@@ -4,19 +4,20 @@ import {prisma} from '../../../shared/lib/prisma';
 export class ProductBrandRepository {
   async findById(id: string): Promise<ProductBrand | null> {
     return await prisma.productBrand.findUnique({
-      where: {id}
+      where: {id, deletedAt: null}
     });
   }
 
   async findByName(name: string): Promise<ProductBrand | null> {
     return await prisma.productBrand.findUnique({
       where: {
-        name
+        name,
+        deletedAt: null
       }
     });
   }
 
-  async findAll(skip?: number, take?: number, where?: Prisma.ProductBrandWhereInput): Promise<ProductBrand[]> {
+  async findAll(skip?: number, take?: number, where?: Prisma.ProductBrandWhereInput, includeArchived: boolean = false): Promise<ProductBrand[]> {
     return await prisma.productBrand.findMany({
       skip,
       take,
@@ -24,13 +25,14 @@ export class ProductBrandRepository {
         name: 'asc'
       },
       where: {
-        ...where
+        ...where,
+        ...(includeArchived ? {} : {deletedAt: null})
       }
     });
   }
 
-  async count(where?: Prisma.ProductBrandWhereInput): Promise<number> {
-    return await prisma.productBrand.count({where});
+  async count(where?: Prisma.ProductBrandWhereInput, includeArchived: boolean = false): Promise<number> {
+    return await prisma.productBrand.count({where: {...where, ...(includeArchived ? {} : {deletedAt: null})}});
   }
 
   async update(id: string, data: Prisma.ProductBrandUpdateInput): Promise<ProductBrand> {

@@ -3,10 +3,10 @@ import {TCreateAttribute, TUpdateAttribute, TCreateAttributeValue, TUpdateAttrib
 
 export class ProductAttributeRepository {
   // --- Attribute Methods ---
-  async getAllAttributes() {
+  async getAllAttributes(includeArchived: boolean = false) {
     return await prisma.attribute.findMany({
-      where: {deletedAt: null},
-      include: {attributeValues: {where: {deletedAt: null}}}
+      where: (includeArchived ? {} : {deletedAt: null}),
+      include: {attributeValues: {where: (includeArchived ? {} : {deletedAt: null})}}
     });
   }
 

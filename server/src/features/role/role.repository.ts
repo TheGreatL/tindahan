@@ -7,12 +7,13 @@ export class RoleRepository {
     page: number;
     limit: number;
     search?: string;
+    includeArchived?: boolean;
   }) {
-    const {page, limit, search} = params;
+    const {page, limit, search, includeArchived} = params;
     const skip = (page - 1) * limit;
 
     const where: Prisma.RoleWhereInput = {
-      deletedAt: null,
+      ...(includeArchived ? {} : {deletedAt: null}),
       AND: [
         search ? {
           OR: [

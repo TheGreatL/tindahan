@@ -20,19 +20,14 @@ export class ProductBrandService {
   ): Promise<{data: ProductBrand[]; total: number}> {
     const skip = (page - 1) * limit;
 
-    const where: Prisma.ProductBrandWhereInput = {
-      AND: [
-        {
+    const where: Prisma.ProductBrandWhereInput = search
+      ? {
           name: {contains: search, mode: 'insensitive'}
-        },
-        {
-          deletedAt: includeArchive ? undefined : null
         }
-      ]
-    };
+      : {};
     const [data, total] = await Promise.all([
-      this.productBrandRepository.findAll(skip, limit, where),
-      this.productBrandRepository.count(where)
+      this.productBrandRepository.findAll(skip, limit, where, includeArchive),
+      this.productBrandRepository.count(where, includeArchive)
     ]);
     return {data, total};
   }

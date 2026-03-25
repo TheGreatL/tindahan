@@ -14,6 +14,14 @@ export const createProductCategorySchema = registry.register(
 );
 export type TCreateProductCategory = z.infer<typeof createProductCategorySchema>;
 
+export const productCategoryQuerySchema = z.object({
+  page: z.coerce.number().optional().default(1),
+  limit: z.coerce.number().optional().default(10),
+  search: z.string().optional(),
+  includeArchived: z.preprocess((val) => val === 'true' || val === true, z.boolean()).optional().default(false)
+});
+export type TProductCategoryQuery = z.infer<typeof productCategoryQuerySchema>;
+
 export const updateProductCategorySchema = registry.register(
   'UpdateProductCategoryRequest',
   createProductCategorySchema.partial()

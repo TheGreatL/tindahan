@@ -9,7 +9,8 @@ const attributeService = new ProductAttributeService();
 export class ProductAttributeController {
   // --- Attributes ---
   static getAllAttributes = asyncHandler(async (req: Request, res: Response) => {
-    const data = await attributeService.getAllAttributes();
+    const query = req.query as any;
+    const data = await attributeService.getAllAttributes(query.includeArchived);
     return ApiResponse.success(res, data, 'Attributes retrieved');
   });
 

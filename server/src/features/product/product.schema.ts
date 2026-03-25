@@ -40,7 +40,8 @@ export const productQuerySchema = z.object({
     .transform((val) => (val ? parseInt(val) : 10)),
   search: z.string().optional(),
   categoryId: z.string().uuid().optional(),
-  brandId: z.string().uuid().optional()
+  brandId: z.string().uuid().optional(),
+  includeArchived: z.preprocess((val) => val === 'true' || val === true, z.boolean()).optional().default(false)
 });
 
 export const productPaginatedResponseSchema = registry.register(

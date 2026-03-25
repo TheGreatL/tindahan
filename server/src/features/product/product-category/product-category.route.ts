@@ -2,12 +2,18 @@ import {Router} from 'express';
 import {validateSchema} from '../../../shared/middleware/schema-validate.middleware';
 import {authMiddleware, authorize} from '../../../shared/middleware/auth.middleware';
 import {Permission} from '@prisma/client';
-import {createProductCategorySchema, updateProductCategorySchema} from './product-category.schema';
+import {createProductCategorySchema, updateProductCategorySchema, productCategoryQuerySchema} from './product-category.schema';
 import {ProductCategoryController} from './product-category.controller';
 
 const route = Router();
 
-route.get('/list', authMiddleware, authorize([Permission.INVENTORY_VIEW]), ProductCategoryController.getAllProductCategory);
+route.get(
+  '/list',
+  authMiddleware,
+  authorize([Permission.INVENTORY_VIEW]),
+  validateSchema(productCategoryQuerySchema, 'query'),
+  ProductCategoryController.getAllProductCategory
+);
 route.post(
   '/',
   authMiddleware,

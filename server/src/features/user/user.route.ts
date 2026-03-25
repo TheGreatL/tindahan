@@ -2,12 +2,12 @@ import {Router} from 'express';
 import {UserController} from './user.controller';
 import {authMiddleware, authorize, isAdmin} from '../../shared/middleware/auth.middleware';
 import {validateSchema} from '../../shared/middleware/schema-validate.middleware';
-import {createUserSchema, updateUserSchema} from './user.schema';
+import {createUserSchema, updateUserSchema, getUsersQuerySchema} from './user.schema';
 
 const route = Router();
 
 // Administrative routes
-route.get('/', authMiddleware, isAdmin, UserController.getAllUsers);
+route.get('/', authMiddleware, isAdmin, validateSchema(getUsersQuerySchema, 'query'), UserController.getAllUsers);
 
 route.post(
   '/',

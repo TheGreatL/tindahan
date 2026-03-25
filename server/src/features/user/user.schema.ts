@@ -44,7 +44,8 @@ export type TUpdateUser = z.infer<typeof updateUserSchema>;
 export const getUsersQuerySchema = z.object({
   page: z.coerce.number().optional().default(1),
   limit: z.coerce.number().optional().default(10),
-  search: z.string().optional()
+  search: z.string().optional(),
+  includeArchived: z.preprocess((val) => val === 'true' || val === true, z.boolean()).optional().default(false)
 });
 
 export type TGetUsersQuery = z.infer<typeof getUsersQuerySchema>;

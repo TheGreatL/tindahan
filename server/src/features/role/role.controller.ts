@@ -21,7 +21,7 @@ export class RoleController {
     return ApiResponse.paginated(
       res,
       data,
-      {total, page: query.page || 1, limit: query.limit || 10},
+      {total, page: query.page, limit: query.limit},
       'Roles retrieved successfully'
     );
   });

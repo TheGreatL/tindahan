@@ -47,13 +47,15 @@ export class UserController {
    *               $ref: '@/components/schemas/UserPaginatedResponse'
    */
   static getAllUsers = asyncHandler(async (req: Request, res: Response) => {
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 10;
-    const search = req.query.search as string;
-
-    const {data, total} = await userService.getAllUsers(page, limit, search);
-
-    return ApiResponse.paginated(res, data, {total, page, limit}, 'Users retrieved successfully');
+    const query = req.query as any;
+    const {data, total} = await userService.getAllUsers(query);
+ 
+    return ApiResponse.paginated(
+      res,
+      data,
+      {total, page: query.page, limit: query.limit},
+      'Users retrieved successfully'
+    );
   });
 
   /**

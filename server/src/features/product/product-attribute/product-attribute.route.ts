@@ -7,7 +7,8 @@ import {
   createAttributeSchema, 
   updateAttributeSchema, 
   createAttributeValueSchema, 
-  updateAttributeValueSchema
+  updateAttributeValueSchema,
+  productAttributeQuerySchema
 } from './product-attribute.schema';
 
 const route = Router();
@@ -17,6 +18,7 @@ route.get(
   '/', 
   authMiddleware, 
   authorize([Permission.INVENTORY_VIEW]), 
+  validateSchema(productAttributeQuerySchema, 'query'),
   ProductAttributeController.getAllAttributes
 );
 

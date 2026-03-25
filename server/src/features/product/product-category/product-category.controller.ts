@@ -7,14 +7,21 @@ import {TCreateProductCategory, TUpdateProductCategory} from './product-category
 const productService = new ProductCategoryService();
 export class ProductCategoryController {
   static getAllProductCategory = asyncHandler(async (req: Request, res: Response) => {
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 10;
-    const search = req.query.search as string;
-    const all = Boolean(req.query.all) as boolean;
-
-    const {data, total} = await productService.getAllProductCategory(page, limit, search, all);
-
-    return ApiResponse.paginated(res, data, {total, page, limit}, 'Products retrieved successfully');
+    const query = req.query as any;
+ 
+    const {data, total} = await productService.getAllProductCategory(
+      query.page,
+      query.limit,
+      query.search,
+      query.includeArchived
+    );
+ 
+    return ApiResponse.paginated(
+      res,
+      data,
+      {total, page: query.page, limit: query.limit},
+      'Categories retrieved successfully'
+    );
   });
   static createProductCategory = asyncHandler(async (req: Request, res: Response) => {
     const productCategory = req.body as TCreateProductCategory;

@@ -9,12 +9,13 @@ export class ProductRepository {
     search?: string;
     categoryId?: string;
     brandId?: string;
+    includeArchived?: boolean;
   }) {
-    const {page, limit, search, categoryId, brandId} = params;
+    const {page, limit, search, categoryId, brandId, includeArchived} = params;
     const skip = (page - 1) * limit;
 
     const where: Prisma.ProductWhereInput = {
-      deletedAt: null,
+      ...(includeArchived ? {} : {deletedAt: null}),
       AND: [
         search ? {
           OR: [
@@ -142,9 +143,20 @@ export class ProductRepository {
   }
 
   async delete(id: string) {
-    return await prisma.product.update({
-      where: {id},
-      data: {deletedAt: new Date()}
-    });
+    const now = new Date();
+    return await prisma.$transaction([
+      prisma.product.update({
+        where: {id},
+        data: {deletedAt: now}
+      }),
+      prisma.productVariant.updateMany({
+        where: {productId: id},
+        data: {deletedAt: now}
+      }),
+      prisma.productImage.updateMany({
+        where: {productId: id},
+        data: {deletedAt: now}
+      })
+    ]);
   }
 }

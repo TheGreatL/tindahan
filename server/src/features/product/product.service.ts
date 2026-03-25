@@ -16,7 +16,8 @@ export class ProductService {
       limit: query.limit || 10,
       search: query.search,
       categoryId: query.categoryId,
-      brandId: query.brandId
+      brandId: query.brandId,
+      includeArchived: query.includeArchived
     });
   }
 

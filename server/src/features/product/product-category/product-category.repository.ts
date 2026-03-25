@@ -4,19 +4,20 @@ import {prisma} from '../../../shared/lib/prisma';
 export class ProductCategoryRepository {
   async findById(id: string): Promise<ProductCategory | null> {
     return await prisma.productCategory.findUnique({
-      where: {id}
+      where: {id, deletedAt: null}
     });
   }
 
   async findByName(name: string): Promise<ProductCategory | null> {
     return await prisma.productCategory.findUnique({
       where: {
-        name
+        name,
+        deletedAt: null
       }
     });
   }
 
-  async findAll(skip?: number, take?: number, where?: Prisma.ProductCategoryWhereInput): Promise<ProductCategory[]> {
+  async findAll(skip?: number, take?: number, where?: Prisma.ProductCategoryWhereInput, includeArchived: boolean = false): Promise<ProductCategory[]> {
     return await prisma.productCategory.findMany({
       skip,
       take,
@@ -24,13 +25,14 @@ export class ProductCategoryRepository {
         name: 'asc'
       },
       where: {
-        ...where
+        ...where,
+        ...(includeArchived ? {} : {deletedAt: null})
       }
     });
   }
 
-  async count(where?: Prisma.ProductCategoryWhereInput): Promise<number> {
-    return await prisma.productCategory.count({where});
+  async count(where?: Prisma.ProductCategoryWhereInput, includeArchived: boolean = false): Promise<number> {
+    return await prisma.productCategory.count({where: {...where, ...(includeArchived ? {} : {deletedAt: null})}});
   }
 
   async update(id: string, data: Prisma.ProductCategoryUpdateInput): Promise<ProductCategory> {

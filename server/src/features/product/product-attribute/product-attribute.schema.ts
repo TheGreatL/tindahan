@@ -11,6 +11,11 @@ export const createAttributeSchema = registry.register(
   })
 );
 
+export const productAttributeQuerySchema = z.object({
+  includeArchived: z.preprocess((val) => val === 'true' || val === true, z.boolean()).optional().default(false)
+});
+export type TProductAttributeQuery = z.infer<typeof productAttributeQuerySchema>;
+
 export const updateAttributeSchema = registry.register('UpdateAttributeRequest', createAttributeSchema.partial());
 
 export const createAttributeValueSchema = registry.register(

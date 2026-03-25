@@ -10,8 +10,8 @@ export class ProductAttributeService {
     this.repository = new ProductAttributeRepository();
   }
 
-  async getAllAttributes() {
-    return await this.repository.getAllAttributes();
+  async getAllAttributes(includeArchived: boolean = false) {
+    return await this.repository.getAllAttributes(includeArchived);
   }
 
   async getAttributeById(id: string) {

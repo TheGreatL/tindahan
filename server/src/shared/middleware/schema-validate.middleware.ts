@@ -6,7 +6,13 @@ import {ApiResponse} from '../utils/api-response';
 export const validateSchema = (schema: ZodType, source: 'body' | 'query' | 'params' = 'body') => {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
-      schema.parse(req[source]);
+      const parsed = schema.parse(req[source]);
+      Object.defineProperty(req, source, {
+        value: parsed,
+        writable: true,
+        configurable: true,
+        enumerable: true
+      });
       next();
     } catch (err: any) {
       if (err.name === 'ZodError') {

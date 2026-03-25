@@ -12,23 +12,23 @@ export class UserService {
     this.userRepository = new UserRepository();
   }
 
-  async getAllUsers(page = 1, limit = 10, search?: string): Promise<{data: User[]; total: number}> {
+  async getAllUsers(query: {page?: number; limit?: number; search?: string; includeArchived?: boolean}): Promise<{data: User[]; total: number}> {
+    const {page = 1, limit = 10, search, includeArchived} = query;
     const skip = (page - 1) * limit;
-
-    const where: Prisma.UserWhereInput =
-      search ?
-        {
+ 
+    const where: Prisma.UserWhereInput = search
+      ? {
           OR: [
-            {email: {contains: search, mode: 'insensitive'}},
-            {firstName: {contains: search, mode: 'insensitive'}},
-            {lastName: {contains: search, mode: 'insensitive'}}
+            {firstName: {contains: search, mode: Prisma.QueryMode.insensitive}},
+            {lastName: {contains: search, mode: Prisma.QueryMode.insensitive}},
+            {email: {contains: search, mode: Prisma.QueryMode.insensitive}}
           ]
         }
       : {};
-
+ 
     const [data, total] = await Promise.all([
-      this.userRepository.findAll(skip, limit, where),
-      this.userRepository.count(where)
+      this.userRepository.findAll(skip, limit, where, includeArchived),
+      this.userRepository.count(where, includeArchived)
     ]);
     return {data, total};
   }
