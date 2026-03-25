@@ -16,42 +16,26 @@ route.use('/category', productCategoryRoute);
 route.use('/attribute', productAttributeRoute);
 
 // 2. Main Product CRUD
-route.get(
-  '/', 
-  authMiddleware, 
-  authorize([Permission.INVENTORY_VIEW]), 
-  ProductController.getAllProducts
-);
+route.get('/', authMiddleware, authorize([Permission.INVENTORY_VIEW]), ProductController.getAllProducts);
 
-route.get(
-  '/:id', 
-  authMiddleware, 
-  authorize([Permission.INVENTORY_VIEW]), 
-  ProductController.getProductById
-);
+route.get('/:id', authMiddleware, authorize([Permission.INVENTORY_VIEW]), ProductController.getProductById);
 
 route.post(
-  '/', 
-  authMiddleware, 
-  authorize([Permission.INVENTORY_EDIT]), 
-  validateSchema(createProductSchema), 
+  '/',
+  authMiddleware,
+  authorize([Permission.INVENTORY_EDIT]),
+  validateSchema(createProductSchema),
   ProductController.createProduct
 );
 
 route.patch(
-  '/:id', 
-  authMiddleware, 
-  authorize([Permission.INVENTORY_EDIT]), 
-  validateSchema(updateProductSchema), 
+  '/:id',
+  authMiddleware,
+  authorize([Permission.INVENTORY_EDIT]),
+  validateSchema(updateProductSchema),
   ProductController.updateProduct
 );
 
-route.delete(
-  '/:id', 
-  authMiddleware, 
-  authorize([Permission.INVENTORY_RECORDS_DELETE]), 
-  ProductController.deleteProduct
-);
+route.delete('/:id', authMiddleware, authorize([Permission.INVENTORY_RECORDS_DELETE]), ProductController.deleteProduct);
 
 export default route;
-

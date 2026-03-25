@@ -10,7 +10,9 @@ const envSchema = z.object({
   REFRESH_TOKEN_SECRET: z.string(),
   REFRESH_TOKEN_DURATION: z.string().default('7d'),
   FRONTEND_URL: z.string().default('http://localhost:5173'),
-  RESEND_API_KEY: z.string().optional()
+  RESEND_API_KEY: z.string().optional(),
+  STORAGE_DRIVER: z.enum(['local', 's3', 'gcs']).default('local'),
+  UPLOAD_DIR: z.string().default('uploads')
 });
 
 const _env = envSchema.safeParse(process.env);

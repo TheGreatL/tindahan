@@ -85,4 +85,47 @@ export class UserController {
     const user = await userService.getUserById(req.params.id as string);
     return ApiResponse.success(res, user, 'User retrieved successfully');
   });
+
+  /**
+   * @swagger
+   * /user:
+   *   post:
+   *     summary: Create a new user account (Admin only)
+   *     tags: [Users]
+   *     security:
+   *       - bearerAuth: []
+   */
+  static createUser = asyncHandler(async (req: Request, res: Response) => {
+    const user = await userService.createUser(req.body);
+    return ApiResponse.success(res, user, 'User account created successfully', 201);
+  });
+
+  /**
+   * @swagger
+   * /user/{id}:
+   *   patch:
+   *     summary: Update a user account
+   *     tags: [Users]
+   *     security:
+   *       - bearerAuth: []
+   */
+  static updateUser = asyncHandler(async (req: Request, res: Response) => {
+    const user = await userService.updateUser(req.params.id as string, req.body);
+    return ApiResponse.success(res, user, 'User account updated successfully');
+  });
+
+  /**
+   * @swagger
+   * /user/{id}:
+   *   delete:
+   *     summary: Delete a user account (Soft delete)
+   *     tags: [Users]
+   *     security:
+   *       - bearerAuth: []
+   */
+  static deleteUser = asyncHandler(async (req: Request, res: Response) => {
+    await userService.deleteUser(req.params.id as string);
+    return ApiResponse.success(res, null, 'User account deleted successfully');
+  });
 }
+

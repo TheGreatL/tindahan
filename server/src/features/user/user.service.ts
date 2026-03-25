@@ -1,6 +1,9 @@
 import {User, Prisma} from '@prisma/client';
+import bcrypt from 'bcrypt';
+import httpStatus from 'http-status';
 import {UserRepository} from './user.repository';
-import {NotFoundException} from '../../shared/exceptions/not-found-exception';
+import {HttpException} from '../../shared/exceptions/http-exception';
+import {TCreateUser, TUpdateUser} from './user.schema';
 
 export class UserService {
   private userRepository: UserRepository;
@@ -33,13 +36,52 @@ export class UserService {
   async getUserById(id: string): Promise<User> {
     const user = await this.userRepository.findById(id);
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new HttpException('User not found', httpStatus.NOT_FOUND);
     }
     return user;
   }
 
-  async updateUser(id: string, data: Prisma.UserUpdateInput): Promise<User> {
+  async createUser(data: TCreateUser): Promise<User> {
+    const existingUser = await this.userRepository.findByEmail(data.email);
+    if (existingUser) {
+      throw new HttpException('User with this email already exists', httpStatus.CONFLICT);
+    }
+
+    const hashedPassword = await bcrypt.hash(data.password, 10);
+
+    return this.userRepository.create({
+      email: data.email,
+      password: hashedPassword,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      avatar: data.avatar,
+      role: {connect: {id: data.roleId}}
+    });
+  }
+
+  async updateUser(id: string, data: TUpdateUser): Promise<User> {
     await this.getUserById(id); // Ensure exists
-    return this.userRepository.update(id, data);
+
+    const updateData: Prisma.UserUpdateInput = {
+      email: data.email,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      avatar: data.avatar
+    };
+
+    if (data.password) {
+      updateData.password = await bcrypt.hash(data.password, 10);
+    }
+
+    if (data.roleId) {
+      updateData.role = {connect: {id: data.roleId}};
+    }
+
+    return this.userRepository.update(id, updateData);
+  }
+
+  async deleteUser(id: string): Promise<User> {
+    await this.getUserById(id); // Ensure exists
+    return this.userRepository.delete(id);
   }
 }

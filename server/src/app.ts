@@ -1,4 +1,5 @@
 import express, {json, urlencoded, type Request, type Response} from 'express';
+import path from 'path';
 import routes from './routes';
 import helmet from 'helmet';
 import cors from 'cors';
@@ -35,10 +36,13 @@ app.use(helmet()); // Set various HTTP headers for security
 // 3. Logging
 app.use(morgan('dev')); // Request logging
 
-// 4. API Routes
+// 4. Static File Serving (uploaded files)
+app.use('/uploads', express.static(path.resolve(process.cwd(), config.UPLOAD_DIR)));
+
+// 5. API Routes
 app.use('/api', routes);
 
-// 5. Swagger API Documentation (accessible at /api/docs)
+// 6. Swagger API Documentation (accessible at /api/docs)
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // 6. 404 Handler for undefined routes

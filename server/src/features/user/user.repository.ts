@@ -6,14 +6,14 @@ export type TUserWithRole = Prisma.UserGetPayload<{include: {role: true}}>;
 export class UserRepository {
   async findById(id: string): Promise<TUserWithRole | null> {
     return await prisma.user.findUnique({
-      where: {id},
+      where: {id, deletedAt: null},
       include: {role: true}
     });
   }
 
   async findByEmail(email: string): Promise<TUserWithRole | null> {
     return await prisma.user.findUnique({
-      where: {email},
+      where: {email, deletedAt: null},
       include: {role: true}
     });
   }
@@ -22,13 +22,14 @@ export class UserRepository {
     return await prisma.user.findMany({
       skip,
       take,
-      where,
-      include: {role: true}
+      where: {...where, deletedAt: null},
+      include: {role: true},
+      orderBy: {createdAt: 'desc'}
     });
   }
 
   async count(where?: Prisma.UserWhereInput): Promise<number> {
-    return await prisma.user.count({where});
+    return await prisma.user.count({where: {...where, deletedAt: null}});
   }
 
   async update(id: string, data: Prisma.UserUpdateInput): Promise<TUserWithRole> {
@@ -45,6 +46,15 @@ export class UserRepository {
       include: {role: true}
     });
   }
+
+  async delete(id: string): Promise<TUserWithRole> {
+    return await prisma.user.update({
+      where: {id},
+      data: {deletedAt: new Date()},
+      include: {role: true}
+    });
+  }
 }
+
 
 
