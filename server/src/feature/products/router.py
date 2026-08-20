@@ -9,12 +9,13 @@ async def get_products(limit:int = 10,
                        page:int = 1,
                        search:str = "",
                        status:DataStatus = DataStatus.active)->ProductsListResponse:
+    
     return ProductsListResponse(
         data=[],
         meta=MetaResponse(
             currentPage= page,
             hasNextPage=True,
-            numberOfItems=10,
+            numberOfItems=limit,
             numberOfPages=10
         )
     )
