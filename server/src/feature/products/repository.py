@@ -19,6 +19,9 @@ class ProductRepository:
     
     def get_by_name(self, db: Session, product_name: str) -> ProductModel | None:
         return db.scalar(select(ProductModel).where(ProductModel.name == product_name))
+    
+    def get_by_bar_code(self, db: Session, bar_code: str) -> ProductModel | None:
+        return db.scalar(select(ProductModel).where(ProductModel.bar_code == bar_code))
 
     def list(
         self,

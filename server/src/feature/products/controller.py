@@ -20,6 +20,12 @@ class ProductController:
 			raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
 		return product
 
+	def get_by_bar_code(self, db: Session, bar_code: str) -> ProductModel:
+		product = self.service.get_by_bar_code(db, bar_code)
+		if product is None:
+			raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
+		return product
+
 	def get_by_id(self, db:Session,product_id:int)->ProductModel:
 		product = self.service.get_by_id(db, product_id)
 		if product is None:

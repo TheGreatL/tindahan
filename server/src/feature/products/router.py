@@ -38,6 +38,9 @@ def get_products(
         ),
     )
 
+@router.get("/{barcode}/bar_code", response_model=ProductResponse)
+def get_product_by_barcode(bar_code: str, db: Session = Depends(get_db)) -> ProductModel:
+    return controller.get_by_bar_code(db, bar_code)
 
 @router.get("/{product_name}", response_model=ProductResponse)
 def get_product(product_name: str, db: Session = Depends(get_db)) -> ProductModel:

@@ -16,6 +16,9 @@ class ProductService:
 	def get(self, db: Session, product_name: str) -> ProductModel | None:
 		return self.repository.get_by_name(db, product_name)
 
+	def get_by_bar_code(self, db: Session, product_bar_code: str) -> ProductModel | None:
+		return self.repository.get_by_bar_code(db, product_bar_code)
+
 	def get_by_id(self, db: Session, product_id: int) -> ProductModel | None:
 		return self.repository.get_by_id(db, product_id)
 
