@@ -3,7 +3,10 @@ name = "server"
 version = "0.1.0"
 requires-python = ">=3.14"
 dependencies = [
+    "alembic>=1.19.1",
     "fastapi[standard]>=0.141.1",
+    "psycopg[binary]>=3.2.3",
+    "python-dotenv>=1.2.2",
     "sqlalchemy>=2.0.52",
 ]
 [tool.fastapi]
