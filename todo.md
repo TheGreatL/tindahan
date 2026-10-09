@@ -2,9 +2,9 @@
 
 ## 1. Scaffold the web application
 
-- [ ] Create a Next.js application in `apps/web`.
-- [ ] Use TypeScript and the project's chosen package manager.
-- [ ] Add a basic home page and verify the app runs locally.
+- [/] Create a Next.js application in `apps/web`.
+- [/] Use TypeScript and the project's chosen package manager.
+- [/] Add a basic home page and verify the app runs locally.
 
 ## 2. Add Docker Compose
 
