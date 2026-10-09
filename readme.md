@@ -18,14 +18,18 @@ Tindahan is a point-of-sale and store-management application for sari-sari store
 
 - **Web application:** Next.js (React)
 - **Database:** MySQL
+- **Development environment:** Docker Compose, to make setup consistent across machines
 - **API:** Next.js Route Handlers to start; FastAPI (Python) if the backend needs a separate service
 
 Next.js can handle app-specific endpoints and server-side operations while the application is small. FastAPI can be introduced for a more substantial backend, Python-based processing or integrations, or an API that needs to serve clients beyond the web app. If both are used, Next.js can act as the web-facing backend-for-frontend and call FastAPI for core business operations.
+
+Docker Compose is intended to run the web application and MySQL together, with persistent database storage. The optional FastAPI service can be added to the Compose setup if and when the project needs it.
 
 ## Suggested project layout
 
 ```text
 tindahan/
+├── compose.yaml
 ├── apps/
 │   ├── web/                 # Next.js application
 │   │   ├── app/             # Pages, layouts, and route handlers
@@ -47,4 +51,4 @@ The FastAPI service is optional; it does not need to be created until the projec
 
 ## Development
 
-Development setup instructions will be added when the application scaffold and dependency configuration are in place.
+The repository is still at the planning stage, so the Docker Compose configuration and startup commands will be added alongside the application scaffold and dependency configuration. The goal is to make starting the development environment a single command.
