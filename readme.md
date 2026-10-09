@@ -27,28 +27,27 @@ Docker Compose is intended to run the web application and MySQL together, with p
 
 ## Suggested project layout
 
+The initial Docker Compose setup will run the Next.js app and MySQL. Compose and shared environment files live at the repository root; the web app's Dockerfile and Docker ignore file live with the app. MySQL uses the official image, so it does not need its own Dockerfile.
+
 ```text
 tindahan/
+├── .env.example             # Documented Compose/app settings; copy to .env locally
+├── .gitignore               # Excludes .env and generated files
 ├── compose.yaml
 ├── apps/
-│   ├── web/                 # Next.js application
-│   │   ├── app/             # Pages, layouts, and route handlers
-│   │   ├── components/      # Shared UI components
-│   │   └── lib/             # API client and frontend utilities
-│   └── api/                 # Optional FastAPI service
-│       ├── app/
-│       │   ├── api/         # HTTP routes
-│       │   ├── core/        # Configuration and shared setup
-│       │   ├── db/          # Database connection and setup
-│       │   ├── models/      # Database models
-│       │   ├── schemas/     # Request and response schemas
-│       │   └── services/    # Business logic
-│       └── tests/
+│   └── web/                 # Next.js application
+│       ├── .dockerignore    # Excludes dependencies/build output from image context
+│       ├── Dockerfile       # Web app development image
+│       ├── package.json
+│       ├── app/             # Pages, layouts, and route handlers
+│       ├── components/      # Shared UI components
+│       ├── lib/             # Database access and app utilities
+│       └── public/           # Static assets
 └── README.md
 ```
 
-The FastAPI service is optional; it does not need to be created until the project has a clear need for it.
+The package manager's lockfile will also live in `apps/web`. Database migrations can be added in the location required by the database library or ORM selected for the app. FastAPI remains optional and can be added as `apps/api/` with its own Dockerfile if a separate backend becomes necessary.
 
 ## Development
 
-The repository is still at the planning stage, so the Docker Compose configuration and startup commands will be added alongside the application scaffold and dependency configuration. The goal is to make starting the development environment a single command.
+The repository is still at the planning stage, so these files and the Docker Compose startup commands will be added alongside the application scaffold and dependency configuration. The goal is to make starting the development environment a single command.
